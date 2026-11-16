@@ -1,0 +1,437 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>4호점 타로 점집</title>
+<meta name="description" content="점술가 병아리 삐별이 병아리 상점가 카드 세 장으로 오늘의 마음을 읽어 드려요. 하루 한 번. 병아리 상점가 4호점.">
+<meta property="og:title" content="4호점 타로 점집">
+<meta property="og:description" content="카드 세 장으로 읽는 오늘의 마음, 하루 한 번. 병아리 상점가 4호점.">
+<meta property="og:image" content="https://piyo-shop.github.io/chick-tarot/cards/tarot_back.png">
+<meta name="theme-color" content="#150f33">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔮</text></svg>">
+<link rel="preload" href="fonts/galmuri11.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face{font-family:"Galmuri11";src:url(fonts/galmuri11.woff2) format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:"Galmuri11";src:url(fonts/galmuri11-bold.woff2) format("woff2");font-weight:700;font-display:swap}
+:root{
+  --bg:#150f33; --bg-dot:#221a4d; --ink:#f5ecff; --muted:#b9abe0; --gold:#ffd86b; --gold-d:#b8862f;
+  --panel:#231a52; --panel-2:#2e2266; --edge:#e8c15a; --rim:#0a0620; --pink:#ff7fbf;
+  color-scheme:dark; box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0; background:var(--bg); color:var(--ink); background-image:radial-gradient(var(--bg-dot) 1.5px,transparent 1.6px); background-size:14px 14px;
+  font-family:"Galmuri11","Apple SD Gothic Neo","Malgun Gothic",sans-serif; font-size:15px; line-height:1.7; -webkit-font-smoothing:none}
+.wrap{max-width:560px; margin:0 auto; padding:18px 14px 40px}
+img.px,canvas{image-rendering:pixelated; image-rendering:crisp-edges}
+/* sign */
+header.front{position:relative; margin:0 3px 14px; border-radius:8px; padding:14px 12px; background:#0f0a28; box-shadow:0 0 0 3px var(--rim), 5px 6px 0 3px rgba(0,0,0,.35)}
+.sign{border:4px solid var(--edge); border-radius:6px; padding:8px 12px; display:flex; align-items:center; gap:10px; background:linear-gradient(180deg,#2b1f63,#1b1446);
+  box-shadow:0 0 12px rgba(255,216,107,.45), inset 0 0 10px rgba(255,216,107,.25)}
+.sign img{width:38px; height:auto; flex:none}
+h1{flex:1; margin:0; font-size:25px; line-height:1.2; color:var(--gold); letter-spacing:1px; text-shadow:2px 2px 0 #6a3fc6}
+.shopno{flex:none; font-size:12px; font-weight:700; color:#1b1446; background:var(--gold); padding:3px 6px; border-radius:3px}
+.mute{position:absolute; right:12px; top:-12px; font:inherit; font-size:16px; width:42px; height:36px; cursor:pointer; color:#fff;
+  background:linear-gradient(180deg,#6a3fc6,#3a2382); border:3px solid #fff; border-radius:7px; box-shadow:0 0 0 3px var(--rim)}
+.mute.off{opacity:.45}
+.win{position:relative; background:linear-gradient(180deg,var(--panel-2),var(--panel)); border:3px solid var(--edge); border-radius:7px;
+  box-shadow:0 0 0 3px var(--rim), 5px 6px 0 3px rgba(0,0,0,.3); padding:14px; margin:0 3px 18px}
+canvas#scene{display:block; width:100%; height:auto; border-radius:3px; background:#1c1446}
+.talk{margin:10px 0 0; min-height:3.4em; padding:2px 4px 0}
+.talk::after{content:"▼"; display:inline-block; margin-left:4px; font-size:10px; color:var(--muted); animation:nudge .8s steps(2) infinite}
+.talk.typing::after{visibility:hidden}
+@keyframes nudge{50%{transform:translateY(2px)}}
+.btn{display:block; width:100%; font:inherit; font-weight:700; font-size:17px; color:#1b1446; background:var(--gold); border:0; border-radius:10px; padding:13px 10px; margin-top:12px;
+  cursor:pointer; box-shadow:0 5px 0 var(--gold-d)}
+.btn:active{transform:translateY(4px); box-shadow:0 1px 0 var(--gold-d)}
+.btn.ghost{background:transparent; color:var(--gold); border:2px solid var(--gold); box-shadow:none; font-size:15px; padding:10px}
+.btn[disabled]{opacity:.4; cursor:default}
+textarea{width:100%; min-height:84px; resize:vertical; font:inherit; font-size:16px; color:#2a2240; background:#fffaf0; border:3px solid var(--edge); border-radius:6px; padding:10px; line-height:1.6}
+.count{font-size:12px; color:var(--muted); text-align:right; margin:4px 2px 0}
+.hint{color:var(--muted); font-size:13px; margin:0 0 10px}
+h2{font-size:17px; margin:0 0 10px; color:var(--gold)}
+/* deck */
+.table{position:relative; min-height:240px}
+.deck{position:relative; height:220px; display:grid; place-items:center}
+.deck img{position:absolute; width:96px; height:auto; border-radius:4px; box-shadow:3px 4px 0 rgba(0,0,0,.35)}
+.deck.go img:nth-child(odd){animation:riffleL .62s ease-in-out infinite}
+.deck.go img:nth-child(even){animation:riffleR .62s ease-in-out infinite}
+.deck.go img:nth-child(3n){animation-delay:.15s}
+@keyframes riffleL{0%,100%{transform:translate(0,0) rotate(0)}40%{transform:translate(-62px,-6px) rotate(-8deg)}}
+@keyframes riffleR{0%,100%{transform:translate(0,0) rotate(0)}40%{transform:translate(62px,-6px) rotate(8deg)}}
+.spread{display:grid; grid-template-columns:repeat(4,1fr); gap:10px}
+.spread button{position:relative; padding:0; border:0; background:none; cursor:pointer; border-radius:5px; animation:deal .35s steps(5) both}
+.spread button img{display:block; width:100%; height:auto; border-radius:4px; box-shadow:3px 4px 0 rgba(0,0,0,.35); transition:transform .15s}
+.spread button:hover img{transform:translateY(-4px)}
+.spread button.pick img{transform:translateY(-8px); outline:3px solid var(--gold); outline-offset:2px; box-shadow:0 0 16px var(--gold)}
+.spread button.pick::after{content:attr(data-n); position:absolute; left:50%; top:-14px; transform:translateX(-50%); background:var(--gold); color:#1b1446; font-weight:700; font-size:13px; padding:0 7px; border-radius:999px}
+.spread button[disabled]{cursor:default}
+.spread.done button:not(.pick){opacity:.25}
+@keyframes deal{from{transform:translateY(-30px); opacity:0}}
+.slots{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; align-items:start}
+.slot{text-align:center}
+.slot .lab{display:inline-block; font-size:12px; font-weight:700; color:#1b1446; background:var(--gold); border-radius:999px; padding:1px 8px; margin-bottom:8px; white-space:nowrap}
+.flip{perspective:600px; cursor:pointer; border:0; background:none; padding:0; width:100%; display:block}
+.flip .inner{position:relative; aspect-ratio:5/8; transition:transform .7s steps(10); transform-style:preserve-3d}
+.flip.on .inner{transform:rotateY(180deg)}
+.flip .face{position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden}
+.flip .face img{width:100%; height:100%; display:block; border-radius:4px; box-shadow:3px 4px 0 rgba(0,0,0,.35)}
+.flip .front{transform:rotateY(180deg)}
+.flip:not(.on) .back img{animation:glow 1.4s steps(4) infinite}
+@keyframes glow{50%{box-shadow:0 0 14px var(--gold)}}
+.slot .nm{font-weight:700; font-size:14px; margin-top:8px; color:var(--gold); min-height:1.6em}
+.slot .mn{font-size:12px; color:var(--muted); line-height:1.5; min-height:3em}
+.reading{background:#fffaf0; color:#2a2240; border:3px solid var(--edge); border-radius:6px; padding:14px; font-size:16px; line-height:1.8; min-height:5em; position:relative}
+.reading::before{content:"✦ 삐별의 풀이"; display:block; font-size:12px; font-weight:700; color:#8a5a34; margin-bottom:6px}
+.fbnote{font-size:12px; color:var(--muted); margin:8px 2px 0}
+.tomorrow{text-align:center; margin:14px 0 0; color:var(--gold); font-weight:700}
+.hist{list-style:none; margin:0; padding:0}
+.hist li{border-top:2px dashed rgba(255,255,255,.18); padding:10px 0}
+.hist li:first-child{border-top:0}
+.hist .row{display:flex; align-items:center; gap:10px; cursor:pointer; background:none; border:0; color:inherit; font:inherit; width:100%; text-align:left; padding:0}
+.hist .row img{width:30px; height:auto; border-radius:2px}
+.hist .date{flex:1; font-size:13px; color:var(--muted)}
+.hist .txt{font-size:14px; line-height:1.7; margin:8px 0 0; color:var(--ink)}
+footer{color:var(--muted); font-size:12px; line-height:1.7; margin:4px 6px 0}
+footer p{margin:0 0 8px}
+footer a{color:var(--gold)}
+[hidden]{display:none !important}
+:focus-visible{outline:3px solid var(--gold); outline-offset:2px}
+/* 공사 중 */
+.gate{position:fixed; inset:0; z-index:50; overflow:auto; background:#150f33; background-image:radial-gradient(#2a2160 1.5px,transparent 1.6px); background-size:14px 14px;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; padding:24px 16px; text-align:center}
+.gate .sky{position:relative; width:min(420px,100%)}
+.gate .sil{width:110px; filter:brightness(0) opacity(.85); margin-bottom:-26px; position:relative; z-index:1; animation:peek 3s steps(3) infinite}
+@keyframes peek{50%{transform:translateY(-6px)}}
+.fence{position:relative; z-index:2; background:repeating-linear-gradient(90deg,#f2b82a 0 34px,#d9951a 34px 38px); border-top:6px solid #ffd84a; border-bottom:10px solid #b8761a; padding:20px 16px 26px}
+.fence .board{background:#2a1560; border:4px solid #ffcf33; box-shadow:6px 6px 0 #5a3a12; padding:14px 10px}
+.fence .board b{display:block; font-size:24px; color:#ffe14d; text-shadow:2px 2px 0 #7a46e0}
+.fence .board span{display:block; font-size:22px; font-weight:700; color:#fff; margin-top:4px; letter-spacing:1px}
+.gate p{color:#d8ccff; margin:18px 0 6px}
+.gate .dday{display:inline-block; font-weight:700; color:#1b1446; background:#ffd86b; border-radius:999px; padding:2px 14px}
+.gate a{color:var(--gold); font-size:14px; margin-top:16px; display:inline-block}
+.demo-go{position:fixed; left:50%; bottom:calc(22px + env(safe-area-inset-bottom,0px)); transform:translateX(-50%); z-index:60; width:auto; padding:12px 18px}
+@media (prefers-reduced-motion:reduce){*{animation:none !important; transition:none !important}}
+@media (max-width:400px){h1{font-size:21px} .slot .mn{font-size:11px}}
+</style>
+</head>
+<body>
+<div class="gate" id="gate" hidden>
+  <div class="sky">
+    <img class="sil" src="byeol.png" alt="">
+    <div class="fence"><div class="board"><b>4호점 타로 점집</b><span>11.23 OPEN</span></div></div>
+  </div>
+  <p>가림막 뒤에서 별을 달고 있어요.<br>11월 23일(월)에 문을 열어요.</p>
+  <span class="dday" id="dday"></span>
+  <a href="https://piyo-shop.github.io/">← 병아리 상점가로 돌아가기</a>
+</div>
+
+<div class="wrap" id="app">
+  <header class="front">
+    <button class="mute" id="muteBtn" type="button" aria-label="효과음 끄기">🔊</button>
+    <div class="sign">
+      <img class="px" src="byeol.png" alt="" aria-hidden="true">
+      <h1>4호점 타로 점집</h1>
+      <span class="shopno" aria-hidden="true">4호점</span>
+    </div>
+  </header>
+
+  <section class="win" aria-label="점집 안">
+    <canvas id="scene" width="200" height="110" role="img" aria-label="별이 달린 천막 안, 수정구 앞에 앉은 점술가 병아리 삐별"></canvas>
+    <p class="talk" id="talk" aria-live="polite"></p>
+
+    <div id="pGreet">
+      <button class="btn" id="enterBtn" type="button">🔮 점 보러 들어가기</button>
+    </div>
+
+    <div id="pAsk" hidden>
+      <label class="hint" for="concern">고민이 있으면 적어 주세요. 안 적어도 괜찮아요.</label>
+      <textarea id="concern" maxlength="100" placeholder="예) 요즘 마음이 자꾸 조급해져요"></textarea>
+      <p class="count" id="count">0 / 100</p>
+      <button class="btn" id="shuffleBtn" type="button">카드 섞기</button>
+      <button class="btn ghost" id="skipBtn" type="button">안 적고 바로 섞을게요</button>
+    </div>
+  </section>
+
+  <section class="win" id="pTable" aria-label="카드 테이블" hidden>
+    <h2 id="tableTitle">카드를 섞는 중…</h2>
+    <p class="hint" id="tableHint"></p>
+    <div class="table">
+      <div class="deck" id="deck"></div>
+      <div class="spread" id="spread" hidden></div>
+      <div class="slots" id="slots" hidden></div>
+    </div>
+  </section>
+
+  <section class="win" id="pRead" aria-label="삐별의 풀이" hidden>
+    <div class="reading" id="reading" aria-live="polite"></div>
+    <p class="fbnote" id="fbnote" hidden>삐별이 잠깐 자리를 비워서, 카드의 뜻을 엮어 풀이했어요.</p>
+    <p class="tomorrow" id="tomorrow" hidden>오늘의 점괘는 여기까지. 내일 또 오세요 ✦</p>
+  </section>
+
+  <section class="win" id="pHist" aria-label="지난 점괘" hidden>
+    <h2>지난 점괘</h2>
+    <p class="hint">이 브라우저에만 남아 있어요.</p>
+    <ul class="hist" id="hist"></ul>
+  </section>
+
+  <footer>
+    <p>고민은 삐별에게 전달돼 풀이를 만드는 데만 쓰이고, 어디에도 저장되지 않아요. 이름 같은 개인정보는 빼고 적어 주세요.</p>
+    <p>카드 풀이는 재미로 보는 오늘의 마음가짐이에요. 병아리 상점가 4호점 · <a href="https://piyo-shop.github.io/">상점가로 돌아가기</a></p>
+  </footer>
+</div>
+
+<script>
+(() => {
+"use strict";
+const $ = id => document.getElementById(id);
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const HASH = location.hash;
+const DEMO = HASH === "#demo";                 // 녹화용: API 없이 정해진 카드·풀이, 기록 저장 안 함
+const PREVIEW = HASH === "#preview";           // 오픈 전 미리 들어가기
+const OPEN_AT = Date.parse("2026-11-23T00:00:00+09:00");
+const API = "https://piyo-chef.piyo-ai-shop.workers.dev/tarot";
+const KEY = "chick-tarot-v1";
+const SLOTS = ["지금의 나", "마음에 걸리는 것", "삐별의 한마디"];
+const DEMO_CARDS = [6, 11, 8];
+const DEMO_CONCERN = "요즘 마음이 자꾸 조급해져요";
+const DEMO_READING = "별빛 수정구가 지금의 당신 곁에 있어요. 마음 깊은 곳에선 이미 답을 알고 있는지도 몰라요. 한밤의 달처럼 흐릿한 걱정이 걸려 있지만, 그 밤도 결국 지나가요. 가로등 불빛이 있는 쪽으로 천천히 걸어가 봐요, 오늘의 별은 당신 편이에요.";
+const CARDS = [
+  { id:1, name:"첫 손님", keyword:"시작", meaning:"처음이라 서툴러도, 문을 연 것만으로 충분해요", image:"tarot_01_first_guest.png" },
+  { id:2, name:"오너의 탑햇", keyword:"결단", meaning:"이제 정할 때예요. 당신의 가게는 당신이 지켜요", image:"tarot_02_owner_tophat.png" },
+  { id:3, name:"생각 화덕", keyword:"내려놓기", meaning:"다 끌어안지 않아도 돼요. 태울 건 태워요", image:"tarot_03_thought_oven.png" },
+  { id:4, name:"마감 영수증", keyword:"돌아보기", meaning:"오늘 한 일, 생각보다 많아요", image:"tarot_04_closing_receipt.png" },
+  { id:5, name:"인형뽑기 집게", keyword:"기회", meaning:"한 번 더 해 봐도 괜찮아요. 이번엔 잡힐지도", image:"tarot_05_claw.png" },
+  { id:6, name:"별빛 수정구", keyword:"직감", meaning:"이미 답을 알고 있을지도 몰라요", image:"tarot_06_star_crystal.png" },
+  { id:7, name:"은행나무 길", keyword:"기다림", meaning:"익는 데는 시간이 걸려요. 지금도 익는 중이에요", image:"tarot_07_ginkgo_road.png" },
+  { id:8, name:"가로등", keyword:"길잡이", meaning:"혼자 찾지 않아도 돼요. 불빛이 있는 쪽으로", image:"tarot_08_street_lamp.png" },
+  { id:9, name:"고양이 수호대", keyword:"보호", meaning:"보이지 않는 곳에서 누군가 지켜 주고 있어요", image:"tarot_09_cat_guard.png" },
+  { id:10, name:"빗속 차양", keyword:"쉼", meaning:"비가 그칠 때까지 잠깐 쉬어 가요", image:"tarot_10_rain_awning.png" },
+  { id:11, name:"한밤의 달", keyword:"불안", meaning:"흐릿한 밤도 지나가요. 아침은 꼭 와요", image:"tarot_11_midnight_moon.png" },
+  { id:12, name:"오늘도 영업합니다", keyword:"다시", meaning:"어제가 어땠든, 오늘 문을 다시 열 수 있어요", image:"tarot_12_open_today.png" }
+];
+const byId = id => CARDS.find(c => c.id === id);
+const BACK = "cards/tarot_back.png";
+const img = (src, alt = "", cls = "px") => { const e = new Image(); e.src = src; e.alt = alt; e.className = cls; e.decoding = "async"; return e; };
+CARDS.forEach(c => { new Image().src = "cards/" + c.image; });
+
+/* ---------- 공사 중 ---------- */
+if (!DEMO && !PREVIEW && Date.now() < OPEN_AT){
+  const left = Math.ceil((OPEN_AT - Date.now()) / 86400e3);
+  $("dday").textContent = left <= 1 ? "내일 오픈!" : `D-${left}`;
+  $("gate").hidden = false; $("app").setAttribute("aria-hidden", "true");
+  document.title = "4호점 타로 점집 · 11.23 OPEN";
+  return;
+}
+
+/* ---------- 기록 (새벽 4시 기준, 브라우저 안에만) ---------- */
+const pad2 = n => String(n).padStart(2, "0");
+const dayKey = (t = Date.now()) => { const d = new Date(t - 4*3600e3); return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`; };
+let B = { v:1, days:{} };
+if (!DEMO){ try { const r = localStorage.getItem(KEY); if (r){ const o = JSON.parse(r); if (o && o.days) B = o; } } catch(e) {} }
+const saveBook = () => { if (DEMO) return; try { localStorage.setItem(KEY, JSON.stringify(B)); } catch(e) {} };
+
+/* ---------- 소리 ---------- */
+const SFX = (() => {
+  let ctx = null, muted = false;
+  try { muted = localStorage.getItem("chick-sfx-muted") === "1"; } catch(e) {}
+  const ac = () => { if (!ctx){ const C = window.AudioContext || window.webkitAudioContext; if (!C) return null; ctx = new C(); } if (ctx.state === "suspended") ctx.resume(); return ctx; };
+  function tone(f, t0, dur, o = {}){ const c = ac(); if (!c || muted) return; const { type = "triangle", vol = .06, to = null } = o; const t = c.currentTime + t0, osc = c.createOscillator(), g = c.createGain();
+    osc.type = type; osc.frequency.setValueAtTime(f, t); if (to) osc.frequency.exponentialRampToValueAtTime(to, t + dur);
+    g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + .01); g.gain.exponentialRampToValueAtTime(.0001, t + dur); osc.connect(g).connect(c.destination); osc.start(t); osc.stop(t + dur + .03); }
+  function noise(t0, dur, vol = .05){ const c = ac(); if (!c || muted) return; const len = Math.floor(c.sampleRate*dur), b = c.createBuffer(1, len, c.sampleRate), d = b.getChannelData(0);
+    for (let i = 0; i < len; i++) d[i] = (Math.random()*2-1) * (1 - i/len); const s = c.createBufferSource(), f = c.createBiquadFilter(), g = c.createGain();
+    s.buffer = b; f.type = "bandpass"; f.frequency.value = 3200; g.gain.value = vol; s.connect(f).connect(g).connect(c.destination); s.start(c.currentTime + t0); }
+  return {
+    audio: ac,
+    shuffle(){ for (let k = 0; k < 7; k++) noise(k*.11, .07, .07); },
+    pick(){ tone(880, 0, .08); tone(1320, .06, .12, { vol:.05 }); },
+    flip(){ noise(0, .09, .08); tone(660, .05, .18, { to:990 }); },
+    chime(){ [988,1319,1568].forEach((f,i) => tone(f, i*.09, .5, { type:"sine", vol:.05 })); },
+    get muted(){ return muted; },
+    toggle(){ muted = !muted; try { localStorage.setItem("chick-sfx-muted", muted ? "1" : "0"); } catch(e) {} if (!muted){ tone(880, 0, .08); tone(1320, .06, .12, { vol:.05 }); } return muted; }
+  };
+})();
+(() => { const m = $("muteBtn"); const sm = () => { m.textContent = SFX.muted ? "🔇" : "🔊"; m.classList.toggle("off", SFX.muted); m.setAttribute("aria-label", SFX.muted ? "효과음 켜기" : "효과음 끄기"); };
+  sm(); m.addEventListener("click", () => { SFX.toggle(); sm(); }); })();
+
+/* ---------- 말풍선 ---------- */
+let typeTimer = null;
+function say(text, el = $("talk"), speed = 32){
+  return new Promise(res => { clearInterval(typeTimer);
+    if (reduce){ el.textContent = text; el.classList.remove("typing"); return res(); }
+    el.textContent = ""; el.classList.add("typing"); const ch = [...text]; let i = 0;
+    typeTimer = setInterval(() => { el.textContent += ch[i++] || ""; if (i >= ch.length){ clearInterval(typeTimer); el.classList.remove("typing"); res(); } }, speed); });
+}
+
+/* ---------- 점집 그림 ---------- */
+const cv = $("scene"), g = cv.getContext("2d"); g.imageSmoothingEnabled = false;
+const SW = 200, SH = 110, BYEOL = img("byeol.png");
+const px = (x, y, w, h, c) => { g.fillStyle = c; g.fillRect(Math.round(x), Math.round(y), w, h); };
+const STARS = Array.from({ length: 26 }, (_, k) => [ (k*53) % 196 + 2, (k*29) % 44 + 4, k*.7 ]);
+let glowUntil = 0;
+function drawScene(T){
+  px(0, 0, SW, SH, "#1c1446");
+  for (let x = 0; x < SW; x += 20) px(x, 0, 10, 70, "#21184f");                        // 천막 줄무늬
+  STARS.forEach(([x, y, p]) => { const a = .5 + .5*Math.sin(T*2 + p); if (a > .3) px(x, y, a > .8 ? 2 : 1, a > .8 ? 2 : 1, "#ffd86b"); });
+  // 커튼
+  for (let k = 0; k < 2; k++){ const x0 = k ? SW - 34 : 0; px(x0, 0, 34, 84, "#3a2378"); for (let s = 4; s < 34; s += 8) px(x0 + s, 0, 2, 84, "#2a1960"); px(x0, 84, 34, 3, "#ffd86b"); }
+  px(0, 0, SW, 6, "#3a2378"); for (let x = 0; x < SW; x += 6) px(x, 6, 3, 3, "#ffd86b");
+  // 매달린 별
+  [[52, 22], [74, 30], [126, 30], [148, 22]].forEach(([x, l], k) => { const sw = Math.round(Math.sin(T*1.6 + k)*1.2);
+    px(x, 9, 1, l, "#8f80c8"); px(x - 2 + sw, 9 + l, 5, 1, "#ffd86b"); px(x + sw, 7 + l, 1, 5, "#ffd86b"); px(x - 1 + sw, 8 + l, 3, 3, "#ffe9a0"); });
+  // 삐별
+  const bob = Math.floor(T*2) % 2;
+  if (BYEOL.complete && BYEOL.naturalWidth) g.drawImage(BYEOL, Math.round(SW/2 - BYEOL.width/2), 40 - bob);
+  // 테이블
+  px(28, 74, SW - 56, 36, "#5a2f8f"); px(28, 74, SW - 56, 3, "#ffd86b"); for (let x = 30; x < SW - 30; x += 8) px(x, 107, 4, 3, "#ffd86b");
+  // 삐별이 안은 수정구의 빛
+  const pulse = .5 + .5*Math.sin(T*3) + (T < glowUntil ? 1.2 : 0);
+  g.fillStyle = `rgba(150,220,255,${.14 + .1*pulse})`; g.beginPath(); g.arc(SW/2, 64 - bob, 9 + pulse*3, 0, 7); g.fill();
+  if (Math.floor(T*3) % 4 === 0) px(SW/2 + 2, 62 - bob, 1, 1, "#ffffff");
+  // 양옆 카드 더미와 초
+  px(40, 80, 14, 20, "#2a1d57"); px(41, 81, 12, 18, "#3a2a7a"); px(46, 87, 2, 4, "#ffd86b");
+  px(150, 76, 4, 14, "#fff2d0"); px(151, 72 - (Math.floor(T*6) % 2), 2, 3, "#ffb04a");
+}
+(function loop(){ drawScene(performance.now()/1000); requestAnimationFrame(loop); })();
+
+/* ---------- 흐름 ---------- */
+const show = (id, on = true) => { $(id).hidden = !on; };
+const wait = ms => new Promise(r => setTimeout(r, ms));
+let deckOrder = [], picks = [], readingPromise = null, flipped = 0;
+const DEMO_SPOTS = [5, 2, 9];   // #demo에서 정해진 카드를 고를 자리
+function demoOrder(){ const rest = shuffled(CARDS.map(c => c.id).filter(id => !DEMO_CARDS.includes(id))), o = [];
+  for (let k = 0, r = 0; k < 12; k++){ const s = DEMO_SPOTS.indexOf(k); o.push(s >= 0 ? DEMO_CARDS[s] : rest[r++]); } return o; }
+const shuffled = arr => { const a = arr.slice(); for (let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random()*(i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+
+function fallbackReading(ids){
+  const iyo = w => { const k = w.charCodeAt(w.length - 1) - 0xAC00; return k >= 0 && k < 11172 && k % 28 ? "이에요" : "예요"; };
+  const c = ids.map(byId), end = s => /[.!?요]$/.test(s) ? s + (s.endsWith("요") ? "." : "") : s + ".";
+  return `지금의 나 자리에 「${c[0].name}」 카드가 나왔어요. ${end(c[0].meaning)} 마음에 걸리는 것은 「${c[1].name}」, ${end(c[1].meaning)} 삐별의 한마디는 「${c[2].name}」${iyo(c[2].name)}. ${end(c[2].meaning)} 오늘의 별빛이 당신 편이에요.`;
+}
+async function askByeol(ids, concern){
+  if (DEMO){ await wait(600); return { text: DEMO_READING, fb: false }; }
+  try {
+    const ctl = new AbortController(), to = setTimeout(() => ctl.abort(), 15000);
+    const r = await fetch(API, { method:"POST", headers:{ "Content-Type":"application/json" }, signal: ctl.signal,
+      body: JSON.stringify({ cards: ids.map(id => { const c = byId(id); return { id:c.id, name:c.name, keyword:c.keyword, meaning:c.meaning }; }), concern }) });
+    clearTimeout(to);
+    const d = await r.json().catch(() => ({}));
+    if (d && d.reply) return { text: d.reply, fb: false };
+  } catch(e) {}
+  return { text: fallbackReading(ids), fb: true };
+}
+
+function renderHistory(){
+  const today = dayKey(), keys = Object.keys(B.days).filter(k => k !== today).sort().reverse().slice(0, 30), ul = $("hist");
+  ul.textContent = ""; show("pHist", keys.length > 0);
+  keys.forEach(k => { const d = B.days[k], li = document.createElement("li"), row = document.createElement("button"), txt = document.createElement("p");
+    row.type = "button"; row.className = "row"; row.setAttribute("aria-expanded", "false");
+    const dt = document.createElement("span"); dt.className = "date"; const [y, m, dd] = k.split("-"); dt.textContent = `${+m}월 ${+dd}일 · ${d.cards.map(id => byId(id).name).join(", ")}`;
+    d.cards.forEach(id => row.append(img("cards/" + byId(id).image, "")));
+    row.append(dt); txt.className = "txt"; txt.textContent = d.reading; txt.hidden = true;
+    row.addEventListener("click", () => { txt.hidden = !txt.hidden; row.setAttribute("aria-expanded", String(!txt.hidden)); });
+    li.append(row, txt); ul.append(li); });
+}
+
+function buildSlots(ids, faceUp){
+  const box = $("slots"); box.textContent = ""; flipped = faceUp ? 3 : 0;
+  ids.forEach((id, k) => { const c = byId(id), s = document.createElement("div"); s.className = "slot";
+    const lab = document.createElement("span"); lab.className = "lab"; lab.textContent = SLOTS[k];
+    const f = document.createElement("button"); f.type = "button"; f.className = "flip" + (faceUp ? " on" : ""); f.setAttribute("aria-label", faceUp ? `${SLOTS[k]}: ${c.name}` : `${SLOTS[k]} 카드 뒤집기`);
+    const inner = document.createElement("div"); inner.className = "inner";
+    const back = document.createElement("div"); back.className = "face back"; back.append(img(BACK, ""));
+    const front = document.createElement("div"); front.className = "face front"; front.append(img("cards/" + c.image, c.name));
+    inner.append(back, front); f.append(inner);
+    const nm = document.createElement("div"); nm.className = "nm"; const mn = document.createElement("div"); mn.className = "mn";
+    if (faceUp){ nm.textContent = `${c.name} · ${c.keyword}`; mn.textContent = c.meaning; }
+    f.addEventListener("click", () => flipCard(k, f, nm, mn));
+    s.append(lab, f, nm, mn); box.append(s); });
+  show("slots");
+}
+function flipCard(k, f, nm, mn){
+  if (f.classList.contains("on") || k !== flipped) return;
+  const c = byId(picks[k]); f.classList.add("on"); f.setAttribute("aria-label", `${SLOTS[k]}: ${c.name}`); SFX.flip();
+  setTimeout(() => { nm.textContent = `${c.name} · ${c.keyword}`; mn.textContent = c.meaning; }, reduce ? 0 : 450);
+  flipped += 1;
+  if (flipped < 3) $("tableHint").textContent = `「${SLOTS[flipped]}」 자리를 눌러 뒤집어 주세요.`;
+  else { $("tableHint").textContent = "세 장이 모두 열렸어요."; setTimeout(showReading, reduce ? 200 : 1100); }
+}
+async function showReading(){
+  say("카드를 읽어 볼게요… ✦"); glowUntil = performance.now()/1000 + 3;
+  const res = await readingPromise; show("pRead"); $("pRead").scrollIntoView({ behavior: reduce ? "auto" : "smooth", block:"start" });
+  SFX.chime();
+  if (!DEMO){ B.days[dayKey()] = { cards: picks.slice(), reading: res.text, fb: res.fb, t: Date.now() }; saveBook(); }
+  await say(res.text, $("reading"), 45);
+  show("fbnote", res.fb); show("tomorrow");
+  say("오늘의 점괘는 여기까지예요. 내일 또 오세요, 별이 기다릴게요.");
+  renderHistory(); if (DEMO) window.__end = true;
+}
+
+function startSpread(){
+  $("tableTitle").textContent = "카드 세 장을 골라 주세요"; $("tableHint").textContent = "마음이 가는 카드를 차례로 눌러요. (0 / 3)";
+  show("deck", false); const sp = $("spread"); sp.textContent = ""; show("spread");
+  deckOrder.forEach((id, k) => { const b = document.createElement("button"); b.type = "button"; b.style.animationDelay = `${k*45}ms`; b.setAttribute("aria-label", `${k + 1}번째 카드`);
+    b.append(img(BACK, "")); b.addEventListener("click", () => pick(b, id)); sp.append(b); });
+  say("천천히, 마음이 가는 카드를 골라 보세요.");
+}
+function pick(b, id){
+  if (picks.length >= 3 || b.classList.contains("pick")) return;
+  picks.push(id); b.classList.add("pick"); b.dataset.n = SLOTS[picks.length - 1]; b.disabled = true; SFX.pick();
+  $("tableHint").textContent = `마음이 가는 카드를 차례로 눌러요. (${picks.length} / 3)`;
+  if (picks.length === 3){
+    $("spread").classList.add("done"); [...$("spread").children].forEach(x => x.disabled = true);
+    readingPromise = askByeol(picks, DEMO ? DEMO_CONCERN : $("concern").value.trim());
+    setTimeout(() => { show("spread", false); $("tableTitle").textContent = "한 장씩 뒤집어 볼까요"; $("tableHint").textContent = `「${SLOTS[0]}」 자리를 눌러 뒤집어 주세요.`; buildSlots(picks, false);
+      say("왼쪽부터 한 장씩 뒤집어 보세요."); }, reduce ? 100 : 900);
+  }
+}
+async function shuffleDeck(){
+  show("pAsk", false); show("pTable"); $("pTable").scrollIntoView({ behavior: reduce ? "auto" : "smooth", block:"start" });
+  $("tableTitle").textContent = "카드를 섞는 중…"; $("tableHint").textContent = "";
+  const deck = $("deck"); deck.textContent = ""; for (let k = 0; k < 8; k++){ const e = img(BACK, ""); e.style.transform = `translate(${k}px,${-k}px)`; deck.append(e); }
+  show("deck"); deck.classList.add("go"); SFX.shuffle(); const t = setInterval(() => SFX.shuffle(), 800);
+  say("별에게 물어보는 중이에요… 카드를 잘 섞어 둘게요.");
+  deckOrder = DEMO ? demoOrder() : shuffled(CARDS.map(c => c.id));
+  await wait(reduce ? 300 : 2400); clearInterval(t); deck.classList.remove("go");
+  startSpread();
+}
+
+function showToday(d){
+  show("pGreet", false); show("pAsk", false); show("pTable"); picks = d.cards.slice();
+  $("tableTitle").textContent = "오늘 고른 카드"; $("tableHint").textContent = "점괘는 하루에 한 번이에요."; show("deck", false); buildSlots(picks, true);
+  show("pRead"); $("reading").textContent = d.reading; show("fbnote", !!d.fb); show("tomorrow");
+  say("오늘은 이미 점을 봤어요. 오늘의 점괘를 다시 보여 드릴게요. 내일 또 오세요!");
+  renderHistory();
+}
+
+$("concern").addEventListener("input", e => { $("count").textContent = `${[...e.target.value].length} / 100`; });
+$("enterBtn").addEventListener("click", () => { SFX.audio(); SFX.pick(); show("pGreet", false); show("pAsk"); say("고민이 있으면 적어 주세요. 비워 둬도 카드는 잘 읽혀요."); $("concern").focus({ preventScroll:true }); });
+$("shuffleBtn").addEventListener("click", shuffleDeck);
+$("skipBtn").addEventListener("click", () => { $("concern").value = ""; shuffleDeck(); });
+
+const todays = !DEMO && B.days[dayKey()];
+if (todays) showToday(todays);
+else { say("어서 오세요, 4호점 타로 점집이에요. 병아리 상점가 카드 세 장으로 오늘의 마음을 읽어 드릴게요."); renderHistory(); }
+
+/* ---------- #demo 자동 재생 ---------- */
+if (DEMO){
+  const go = document.createElement("button"); go.className = "btn demo-go"; go.type = "button"; go.textContent = "녹화를 켠 뒤 눌러서 시작"; document.body.append(go);
+  go.addEventListener("click", async () => {
+    go.remove(); await wait(600);
+    await say("어서 오세요, 4호점 타로 점집이에요. 병아리 상점가 카드 세 장으로 오늘의 마음을 읽어 드릴게요."); await wait(900);
+    $("enterBtn").click(); await wait(1200);
+    const ta = $("concern"); for (const ch of DEMO_CONCERN){ ta.value += ch; ta.dispatchEvent(new Event("input")); await wait(70); }
+    await wait(700); $("shuffleBtn").click();
+    await wait(2400 + 1500);
+    const btns = () => [...$("spread").children];
+    for (const s of DEMO_SPOTS){ btns()[s].click(); await wait(750); }
+    await wait(1300);
+    for (let k = 0; k < 3; k++){ $("slots").children[k].querySelector(".flip").click(); await wait(1300); }
+  }, { once:true });
+}
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+{
+  "back": "tarot_back.png",
+  "size": {
+    "width": 60,
+    "height": 96,
+    "scale_x8": 8
+  },
+  "cards": [
+    {
+      "id": 1,
+      "name": "첫 손님",
+      "keyword": "시작",
+      "meaning": "처음이라 서툴러도, 문을 연 것만으로 충분해요",
+      "image": "tarot_01_first_guest.png"
+    },
+    {
+      "id": 2,
+      "name": "오너의 탑햇",
+      "keyword": "결단",
+      "meaning": "이제 정할 때예요. 당신의 가게는 당신이 지켜요",
+      "image": "tarot_02_owner_tophat.png"
+    },
+    {
+      "id": 3,
+      "name": "생각 화덕",
+      "keyword": "내려놓기",
+      "meaning": "다 끌어안지 않아도 돼요. 태울 건 태워요",
+      "image": "tarot_03_thought_oven.png"
+    },
+    {
+      "id": 4,
+      "name": "마감 영수증",
+      "keyword": "돌아보기",
+      "meaning": "오늘 한 일, 생각보다 많아요",
+      "image": "tarot_04_closing_receipt.png"
+    },
+    {
+      "id": 5,
+      "name": "인형뽑기 집게",
+      "keyword": "기회",
+      "meaning": "한 번 더 해 봐도 괜찮아요. 이번엔 잡힐지도",
+      "image": "tarot_05_claw.png"
+    },
+    {
+      "id": 6,
+      "name": "별빛 수정구",
+      "keyword": "직감",
+      "meaning": "이미 답을 알고 있을지도 몰라요",
+      "image": "tarot_06_star_crystal.png"
+    },
+    {
+      "id": 7,
+      "name": "은행나무 길",
+      "keyword": "기다림",
+      "meaning": "익는 데는 시간이 걸려요. 지금도 익는 중이에요",
+      "image": "tarot_07_ginkgo_road.png"
+    },
+    {
+      "id": 8,
+      "name": "가로등",
+      "keyword": "길잡이",
+      "meaning": "혼자 찾지 않아도 돼요. 불빛이 있는 쪽으로",
+      "image": "tarot_08_street_lamp.png"
+    },
+    {
+      "id": 9,
+      "name": "고양이 수호대",
+      "keyword": "보호",
+      "meaning": "보이지 않는 곳에서 누군가 지켜 주고 있어요",
+      "image": "tarot_09_cat_guard.png"
+    },
+    {
+      "id": 10,
+      "name": "빗속 차양",
+      "keyword": "쉼",
+      "meaning": "비가 그칠 때까지 잠깐 쉬어 가요",
+      "image": "tarot_10_rain_awning.png"
+    },
+    {
+      "id": 11,
+      "name": "한밤의 달",
+      "keyword": "불안",
+      "meaning": "흐릿한 밤도 지나가요. 아침은 꼭 와요",
+      "image": "tarot_11_midnight_moon.png"
+    },
+    {
+      "id": 12,
+      "name": "오늘도 영업합니다",
+      "keyword": "다시",
+      "meaning": "어제가 어땠든, 오늘 문을 다시 열 수 있어요",
+      "image": "tarot_12_open_today.png"
+    }
+  ]
+}
